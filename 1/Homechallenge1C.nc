@@ -42,7 +42,6 @@
  
 #include "Timer.h"
 #include "Homechallenge1.h"
-#include "stdio.h"
  
 /**
  * Implementation of the RadioCountToLeds application. RadioCountToLeds 
@@ -74,7 +73,7 @@ implementation {
 
   bool locked;
   uint16_t counter = 0;
-
+  
   event void Boot.booted() {
     call AMControl.start();
   }
