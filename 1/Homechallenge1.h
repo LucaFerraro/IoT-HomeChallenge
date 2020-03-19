@@ -38,8 +38,8 @@
  * 94704.  Attention:  Intel License Inquiry.
  */
 
-#ifndef RADIO_COUNT_TO_LEDS_H
-#define RADIO_COUNT_TO_LEDS_H
+#ifndef HOMECHALLENGE1_H
+#define HOMECHALLENGE1_H
 
 typedef nx_struct radio_count_msg {
 
