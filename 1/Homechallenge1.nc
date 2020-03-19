@@ -60,9 +60,9 @@ module Homechallenge1 @safe() {
     interface Boot;
     interface Receive;
     interface AMSend;
-    uses interface Timer<TMilli> as Timer0;
-    uses interface Timer<TMilli> as Timer1;
-    uses interface Timer<TMilli> as Timer2;
+    interface Timer<TMilli> as Timer0;
+    interface Timer<TMilli> as Timer1;
+    interface Timer<TMilli> as Timer2;
     interface SplitControl as AMControl;
     interface Packet;
   }
