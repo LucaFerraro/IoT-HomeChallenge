@@ -42,6 +42,7 @@
  
 #include "Timer.h"
 #include "Homechallenge1.h"
+#include "stdio.h"
  
 /**
  * Implementation of the RadioCountToLeds application. RadioCountToLeds 
@@ -73,8 +74,7 @@ implementation {
 
   bool locked;
   uint16_t counter = 0;
-  uint16_t TOS_NODE_ID;
-  
+
   event void Boot.booted() {
     call AMControl.start();
   }
@@ -228,7 +228,7 @@ implementation {
 
       radio_count_msg_t* rcm = (radio_count_msg_t*)payload;
 
-      if ((rcm->counter & 0x15) % 1010) {
+      if (rcm->counter % 10 == 0) {
 
         call Leds.led0Off();
         call Leds.led1Off();
@@ -239,21 +239,21 @@ implementation {
 
       else{
 
-        if (rcm->senderid == 0) {
-
-          call Leds.led0On();
-
-        }
-
         if (rcm->senderid == 1) {
 
-          call Leds.led1On();
+          call Leds.led0Toggle();
 
         }
 
         if (rcm->senderid == 2) {
 
-          call Leds.led2On();
+          call Leds.led1Toggle();
+
+        }
+
+        if (rcm->senderid == 3) {
+
+          call Leds.led2Toggle();
 
         }
 
