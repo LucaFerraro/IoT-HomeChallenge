@@ -233,7 +233,6 @@ implementation {
         call Leds.led1Off();
         call Leds.led2Off();
 
-        // return bufPtr;
       }
 
       else{
@@ -256,7 +255,6 @@ implementation {
 
         }
 
-        // return bufPtr;
 
       }
 
