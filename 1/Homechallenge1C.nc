@@ -54,7 +54,7 @@
  * @date   June 6 2005
  */
 
-module Homechallenge1 @safe() {
+module Homechallenge1C @safe() {
   uses {
     interface Leds;
     interface Boot;
@@ -228,7 +228,7 @@ implementation {
 
       radio_count_msg_t* rcm = (radio_count_msg_t*)payload;
 
-      if (rcm->counter & 0x15 == 1010) {
+      if ((rcm->counter & 0x15) % 1010) {
 
         call Leds.led0Off();
         call Leds.led1Off();
@@ -241,33 +241,21 @@ implementation {
 
         if (rcm->senderid == 0) {
 
-          if (rcm->counter & 0x1) {
-            call Leds.led0On();
-                }
-          else {
-            call Leds.led0Off();
-                }
-              }
+          call Leds.led0On();
+
+        }
 
         if (rcm->senderid == 1) {
 
-          if (rcm->counter & 0x2) {
-            call Leds.led1On();
-                }
-          else {
-            call Leds.led1Off();
-                }
-              }
+          call Leds.led1On();
+
+        }
 
         if (rcm->senderid == 2) {
 
-          if (rcm->counter & 0x4) {
-            call Leds.led2On();
-                }
-          else {
-            call Leds.led2Off();
-                }
-              }
+          call Leds.led2On();
+
+        }
 
         // return bufPtr;
 

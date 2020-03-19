@@ -56,7 +56,7 @@
 configuration Homechallenge1AppC {}
 implementation {
 
-  components MainC, Homechallenge1 as App, LedsC;
+  components MainC, Homechallenge1C as App, LedsC;
 
   components new AMSenderC(AM_RADIO_COUNT_MSG);
 

@@ -1,4 +1,4 @@
-COMPONENT=Homechallenge1
+COMPONENT=Homechallenge1C
 #BUILD_EXTRA_DEPS = RadioCountMsg.py RadioCountMsg.class
 #CLEAN_EXTRA = RadioCountMsg.py RadioCountMsg.class RadioCountMsg.java
 
@@ -13,4 +13,5 @@ COMPONENT=Homechallenge1
 
 
 include $(MAKERULES)
+
 
