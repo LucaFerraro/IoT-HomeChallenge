@@ -1,4 +1,4 @@
-COMPONENT=Homechallenge1C
+COMPONENT=Homechallenge1AppC 
 #BUILD_EXTRA_DEPS = RadioCountMsg.py RadioCountMsg.class
 #CLEAN_EXTRA = RadioCountMsg.py RadioCountMsg.class RadioCountMsg.java
 
