@@ -55,6 +55,7 @@
  */
 
 module Homechallenge1C @safe() {
+
   uses {
     interface Leds;
     interface Boot;
@@ -67,6 +68,7 @@ module Homechallenge1C @safe() {
     interface Packet;
   }
 }
+
 implementation {
 
   message_t packet;
@@ -82,9 +84,10 @@ implementation {
 
     if (err == SUCCESS) {
 
-      call Timer0.startPeriodic( 1000 );
-      call Timer1.startPeriodic( 333 );
-      call Timer2.startPeriodic( 200 );
+      // Defining the 3 timers
+      call Timer0.startPeriodic( 1000 ); // 1Hz
+      call Timer1.startPeriodic( 333 );  // 3Hz
+      call Timer2.startPeriodic( 200 );  // 5Hz
 
     }
 
@@ -101,7 +104,7 @@ implementation {
   }
   
 
-  // Timer 0 fired 
+  // Timer zero expires
   event void Timer0.fired() {
 
     counter++;
@@ -124,9 +127,9 @@ implementation {
 
       }
 
-      rcm->counter = counter;
-
-      rcm->senderid = TOS_NODE_ID;
+      // Filling messages fields:
+      rcm->counter = counter;      // Counter value 
+      rcm->senderid = TOS_NODE_ID; // ID of the node
 
       if (call AMSend.send(AM_BROADCAST_ADDR, &packet, sizeof(radio_count_msg_t)) == SUCCESS) {
 
@@ -139,7 +142,7 @@ implementation {
   }
 
 
-  // Timer 1 fired 
+  // Timer 1 Expires:
   event void Timer1.fired() {
 
     counter++;
@@ -162,9 +165,9 @@ implementation {
 
       }
 
-      rcm->counter = counter;
-
-      rcm->senderid = TOS_NODE_ID;
+      // Filling messages fields:
+      rcm->counter = counter;      // Counter value 
+      rcm->senderid = TOS_NODE_ID; // ID of the node
 
       if (call AMSend.send(AM_BROADCAST_ADDR, &packet, sizeof(radio_count_msg_t)) == SUCCESS) {
 
@@ -177,7 +180,7 @@ implementation {
   }
 
 
-  // Timer 2 fired
+  // Timer 2 expires:
   event void Timer2.fired() {
 
     counter++;
@@ -200,9 +203,9 @@ implementation {
 
       }
 
-      rcm->counter = counter;
-
-      rcm->senderid = TOS_NODE_ID;
+      // Filling messages fields:
+      rcm->counter = counter;      // Counter value 
+      rcm->senderid = TOS_NODE_ID; // ID of the node
 
       if (call AMSend.send(AM_BROADCAST_ADDR, &packet, sizeof(radio_count_msg_t)) == SUCCESS) {
 
@@ -215,9 +218,8 @@ implementation {
   }
 
 
-
-  event message_t* Receive.receive(message_t* bufPtr, 
-				   void* payload, uint8_t len) {
+  // When a packet is received:
+  event message_t* Receive.receive(message_t* bufPtr, void* payload, uint8_t len) {
 
     dbg("Homechallenge1", "Homechallenge1 packet of length %hhu.\n", len);
 
@@ -227,6 +229,7 @@ implementation {
 
       radio_count_msg_t* rcm = (radio_count_msg_t*)payload;
 
+      // Every 10 packets we turn all the leds off:
       if (rcm->counter % 10 == 0) {
 
         call Leds.led0Off();
@@ -235,27 +238,31 @@ implementation {
 
       }
 
+      // If counter is not multiple of 10 we turn on the leds depending
+      // on the mote that has sent the packet
       else{
 
+        // If sender is mote 1:
         if (rcm->senderid == 1) {
 
-          call Leds.led0On();
+          call Leds.led0On(); // Red led on.
 
         }
 
+        // If sender is mote 2:
         if (rcm->senderid == 2) {
 
-          call Leds.led1On();
+          call Leds.led1On(); // Green led on.
 
         }
 
+        // If sender is mote 3:
         if (rcm->senderid == 3) {
 
-          call Leds.led2On();
+          call Leds.led2On(); // Blue led on.
 
         }
-
-
+        
       }
 
       return bufPtr;
