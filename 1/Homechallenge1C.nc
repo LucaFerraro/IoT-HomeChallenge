@@ -241,19 +241,19 @@ implementation {
 
         if (rcm->senderid == 1) {
 
-          call Leds.led0Toggle();
+          call Leds.led0On();
 
         }
 
         if (rcm->senderid == 2) {
 
-          call Leds.led1Toggle();
+          call Leds.led1On();
 
         }
 
         if (rcm->senderid == 3) {
 
-          call Leds.led2Toggle();
+          call Leds.led2On();
 
         }
 
