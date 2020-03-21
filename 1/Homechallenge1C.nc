@@ -59,6 +59,13 @@ implementation {
   // Timer zero expires
   event void Timer0.fired() {
 
+    // Proceeding only if we're node 1
+    if(TOS_NODE_ID != 1){
+
+      return;
+
+    }
+
     counter++;
 
     dbg("Homechallenge1", "Homechallenge1: timer fired, counter is %hu.\n", counter);
@@ -97,6 +104,13 @@ implementation {
   // Timer 1 Expires:
   event void Timer1.fired() {
 
+    // Procedeeding only if we're node 2:
+    if(TOS_NODE_ID != 2){
+
+      return;
+
+    }
+
     counter++;
 
     dbg("Homechallenge1", "Homechallenge1: timer fired, counter is %hu.\n", counter);
@@ -134,6 +148,13 @@ implementation {
 
   // Timer 2 expires:
   event void Timer2.fired() {
+
+    // Proceeding only if we're node 3:
+    if(TOS_NODE_ID != 3){
+
+      return;
+
+    }
 
     counter++;
 
