@@ -16,7 +16,7 @@ After the start done event, the 3 timers will be initialized with different freq
 * 3Hz: frequency at which Mote2 sends messages.
 * 5Hz: frequency at which Mote3 sends messages.
 
-When a timer expires, it triggers the corresponding function. Since Mote1 sends messages at 1Hz, Mote2 at 3Hz and Mote3 at 5Hz, the first check inside each function is on the *TOS_NODE_ID* of the node: if it doesn't match with the timer that has expired, the function return without doing anything.
+When a timer expires, it triggers the corresponding function. Since Mote1 sends messages at 1Hz, Mote2 at 3Hz and Mote3 at 5Hz, the first check inside each function is on the *TOS_NODE_ID* of the node: if it doesn't match with the timer that has expired, the function returns without doing anything.
 Otherwise, the funtion increments the counter variable and creates the sendable message (*rcm*) assigning it the current counter and the *TOS_NODE_ID* of the sender. When the message is ready it's sent as a *broadcast message* and the lock will be released.  
 
 When a message is received, the payload is extracted:
