@@ -243,7 +243,7 @@ module sendAckC {
 	resp->data = data; // Fake data
 
 	// Send response to 1
-	if(call AMSend.send( 1 , &packet,sizeof(my_msg_t)) == SUCCESS){
+	if(call AMSend.send(1 , &packet,sizeof(my_msg_t)) == SUCCESS){
 
 		dbg("radio_send", "Packet passed to lower layer successfully!\n");
 		dbg("radio_pack",">>>Pack\n \t Payload length %hhu \n", call Packet.payloadLength( &packet ) );
@@ -252,9 +252,6 @@ module sendAckC {
 		dbg_clear("radio_pack", "\t\t counter: %hhu \n", resp->counter);
 	
 	}
-
-
-
-	}
+ 	}
 
 }
