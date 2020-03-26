@@ -26,28 +26,18 @@ module sendAckC {
 } implementation {
 
   uint8_t counter = 0;
-  // uint8_t rec_id;
 
-  bool rec_id = FALSE; // Boolean if the ack is received
+  // BOOL: it's set to TRUE when Mote1 receives the first ACK from Mote2:
+  bool rec_id = FALSE; 
+
   message_t packet;
 
   void sendReq();
-  //void sendReq( uint8_t counter );
   void sendResp();
-  //void sendResp(uint8_t counter);
-  
   
   //***************** Send request function ********************//
   void sendReq() {
-	/* This function is called when we want to send a request
-	 *
-	 * STEPS:
-	 * 1. Prepare the msg
-	 * 2. Set the ACK flag for the message using the PacketAcknowledgements interface
-	 *     (read the docs)
-	 * 3. Send an UNICAST message to the correct node
-	 * X. Use debug statements showing what's happening (i.e. message fields)
-	 */
+
 	my_msg_t* rcm = (my_msg_t*)call Packet.getPayload(&packet, sizeof(my_msg_t));
 
 	if (rcm == NULL) {
@@ -57,13 +47,14 @@ module sendAckC {
 	}
 
 	// Filling messages fields:
-	rcm->counter = counter;      // Counter value 
-	rcm->type = REQ; // Type of the msg
+	rcm->counter = counter;  // Counter value 
+	rcm->type = REQ;         // Type of the msg
 
-	call PacketAcknowledgements.requestAck(&packet); // Set the ACK
+	// Indicates the message must be ACKed:
+	call PacketAcknowledgements.requestAck(&packet);
 
-	// Send request to 2
-	if(call AMSend.send(2 , &packet,sizeof(my_msg_t)) == SUCCESS){
+	// Send REQUEST	message to Mote2:
+	if(call AMSend.send(2, &packet, sizeof(my_msg_t)) == SUCCESS){
 
 		dbg("radio_send", "Packet passed to lower layer successfully!\n");
 		dbg("radio_pack",">>>Pack\n \t Payload length %hhu \n", call Packet.payloadLength( &packet ) );
@@ -89,21 +80,18 @@ module sendAckC {
  }        
 
   //****************** Task send response *****************//
-  // Added counter from the message with the Request
   void sendResp() {
-  	/* This function is called when we receive the REQ message.
-  	 * Nothing to do here. 
-  	 * `call Read.read()` reads from the fake sensor.
-  	 * When the reading is done it raise the event read done.
-  	 */
+
 	call Read.read();
+
   }
 
   //***************** Boot interface ********************//
   event void Boot.booted() {
-	dbg("boot","Application booted.\n");
 
-	dbg("boot","Application booted on node %u.\n", TOS_NODE_ID);
+	dbg("boot", "APPLICATION BOOTED!.\n");
+
+	dbg("boot", "Application booted on node %u.\n", TOS_NODE_ID);
 	call SplitControl.start();
 
   }
@@ -124,7 +112,6 @@ module sendAckC {
 
     else{
 
-		//dbg for error
 		call SplitControl.start();
 
     }
@@ -134,37 +121,25 @@ module sendAckC {
 
   //***************** MilliTimer interface ********************//
   event void requestTimer.fired() {
-	/* This event is triggered every time the timer fires.
-	 * When the timer fires, we send a request
-	 * Fill this part...
-	 */
 
-	if (TOS_NODE_ID == 1 && !rec_id ){ // If we are in node 1 and If not yet received ack
+	// If we're Mote1 and the ACK hasn't already been received:
+	if (TOS_NODE_ID == 1 && !rec_id ){
 
 		counter++;
 
 		sendReq();
-		//sendReq( counter );
 
 	}
   }
   
 
   //********************* AMSend interface ****************//
-  event void AMSend.sendDone(message_t* buf,error_t err) {
-	/* This event is triggered when a message is sent 
-	 *
-	 * STEPS:
-	 * 1. Check if the packet is sent
-	 * 2. Check if the ACK is received (read the docs)
-	 * 2a. If yes, stop the timer. The program is done
-	 * 2b. Otherwise, send again the request
-	 * X. Use debug statements showing what's happening (i.e. message fields)
-	 */
+  event void AMSend.sendDone(message_t* buf, error_t err){
 
-	if(&packet == buf && call PacketAcknowledgements.wasAcked( buf )){
+	// If an ACK is received:
+    if(&packet == buf && call PacketAcknowledgements.wasAcked( buf )){
 
-		dbg("radio_ack", "ACK received!\n");
+	  	dbg("radio_ack", "ACK received!\n");
 
 		if (TOS_NODE_ID == 1){
 
@@ -183,21 +158,13 @@ module sendAckC {
 	}
 
     else{
-		// Do nothing -> The timer fired will send another Request
+		// Does nothing -> The timer fired will send another Request.
 	}
 
   }
 
   //***************************** Receive interface *****************//
-  event message_t* Receive.receive(message_t* buf,void* payload, uint8_t len) {
-	/* This event is triggered when a message is received 
-	 *
-	 * STEPS:
-	 * 1. Read the content of the message
-	 * 2. Check if the type is request (REQ)
-	 * 3. If a request is received, send the response
-	 * X. Use debug statements showing what's happening (i.e. message fields)
-	 */
+  event message_t* Receive.receive(message_t* buf, void* payload, uint8_t len) {
 
     if (len != sizeof(my_msg_t)) {
 
@@ -206,16 +173,17 @@ module sendAckC {
 	}
 
     else {
+
 		my_msg_t* mess = (my_msg_t*)payload;
 		
 		dbg("radio_rec", "Received packet at time %s\n", sim_time_string());
-		dbg("radio_pack","Payload length %hhu \n", call Packet.payloadLength( buf ));
+		dbg("radio_pack", "Payload length %hhu \n", call Packet.payloadLength( buf ));
 		dbg("radio_pack", ">>>Pack \n");
-		dbg_clear("radio_pack","\t\t Payload Received\n" );
+		dbg_clear("radio_pack", "\t\t Payload Received\n" );
 
 		if (mess->type == 1){
 
-					dbg_clear("radio_pack", "\t\t type: REQ \n ");
+			dbg_clear("radio_pack", "\t\t type: REQ \n ");
 
 		}
 		else{
@@ -224,14 +192,12 @@ module sendAckC {
 			
 		}
 
-
-
 		if (mess->type == REQ && TOS_NODE_ID== 2 ){
 
 			counter = mess->counter;
 
-			sendResp(); // Send Response
-			//sendResp( mess->counter); // Send Response
+			// Sending RESPONSE:
+			sendResp();
 
 		}
 
@@ -256,18 +222,10 @@ module sendAckC {
   
   //************************* Read interface **********************//
   event void Read.readDone(error_t result, uint16_t data) {
-	/* This event is triggered when the fake sensor finish to read (after a Read.read()) 
-	 *
-	 * STEPS:
-	 * 1. Prepare the response (RESP)
-	 * 2. Send back (with a unicast message) the response
-	 * X. Use debug statement showing what's happening (i.e. message fields)
-	 */
-
 
 	my_msg_t* resp = (my_msg_t*)call Packet.getPayload(&packet, sizeof(my_msg_t));
 	
-	dbg("role","fake read done %hhu\n",data);
+	dbg("role", "Fake read done %hhu\n",data);
 
 	if (resp == NULL) {
 
@@ -276,18 +234,19 @@ module sendAckC {
 	}
 
 	// Filling messages fields:
-	resp->counter = counter;      // Counter value 
-	resp->type = RESP; // Type of the msg
-	resp->data = data; // Fake data
+	resp->counter = counter;  // Counter value 
+	resp->type = RESP;        // Type of the msg
+	resp->data = data;        // Fake data
 
-	call PacketAcknowledgements.requestAck(&packet); // Set the ACK
+	// Indicates the message must be ACKed:
+	call PacketAcknowledgements.requestAck(&packet);
 
-	// Send response to 1
-	if(call AMSend.send(1 , &packet,sizeof(my_msg_t)) == SUCCESS){
+	// Send response to 1:
+	if(call AMSend.send(1 , &packet, sizeof(my_msg_t)) == SUCCESS){
 
 		dbg("radio_send", "Packet passed to lower layer successfully!\n");
-		dbg("radio_pack",">>>Pack\n \t Payload length %hhu \n", call Packet.payloadLength( &packet ) );
-		dbg_clear("radio_pack","\t Payload Sent at time %s\n", sim_time_string() );
+		dbg("radio_pack", ">>>Pack\n \t Payload length %hhu \n", call Packet.payloadLength( &packet ));
+		dbg_clear("radio_pack", "\t Payload Sent at time %s\n", sim_time_string());
 
 		if (resp->type == 1){
 
@@ -304,5 +263,4 @@ module sendAckC {
 	
 	  }
  	}
-
 }
