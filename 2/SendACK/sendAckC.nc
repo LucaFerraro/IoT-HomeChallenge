@@ -265,7 +265,7 @@ module sendAckC {
 
 	my_msg_t* resp = (my_msg_t*)call Packet.getPayload(&packet, sizeof(my_msg_t));
 	
-	dbg("role","fake read done %f\n",data);
+	dbg("role","fake read done %hhu\n",data);
 
 	if (resp == NULL) {
 
@@ -294,6 +294,7 @@ module sendAckC {
 		else{
 
 			dbg_clear("radio_pack", "\t\t type: RESP \n ");
+			dbg_clear("radio_pack", "\t\t data: %hhu \n ", resp->data);
 			
 		}
 		dbg_clear("radio_pack", "\t\t counter: %hhu \n", resp->counter);
