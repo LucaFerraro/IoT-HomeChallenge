@@ -226,7 +226,7 @@ module sendAckC {
 
 		if (mess->type == REQ && TOS_NODE_ID== 2 ){
 
-			dbg_clear("radio_pack", "\t\t data: %hhu \n", mess->data);
+			dbg_clear("radio_pack", "\t\t counter: %hhu \n", mess->counter);
 
 			counter = mess->counter;
 
@@ -286,10 +286,19 @@ module sendAckC {
 		dbg("radio_send", "Packet passed to lower layer successfully!\n");
 		dbg("radio_pack",">>>Pack\n \t Payload length %hhu \n", call Packet.payloadLength( &packet ) );
 		dbg_clear("radio_pack","\t Payload Sent\n" );
-		dbg_clear("radio_pack", "\t\t type: %hhu \n ", resp->type);
+		if (resp->type == 1){
+
+			dbg_clear("radio_pack", "\t\t type: REQ \n ");
+
+		}
+		else{
+
+			dbg_clear("radio_pack", "\t\t type: RESP \n ");
+			
+		}
 		dbg_clear("radio_pack", "\t\t counter: %hhu \n", resp->counter);
 	
-	}
+	  }
  	}
 
 }
