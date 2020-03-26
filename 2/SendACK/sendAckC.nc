@@ -237,9 +237,10 @@ module sendAckC {
 	 * X. Use debug statement showing what's happening (i.e. message fields)
 	 */
 
-	dbg("role","fake read done %f\n",data);
 
 	my_msg_t* resp = (my_msg_t*)call Packet.getPayload(&packet, sizeof(my_msg_t));
+	
+	dbg("role","fake read done %f\n",data);
 
 	if (resp == NULL) {
 
