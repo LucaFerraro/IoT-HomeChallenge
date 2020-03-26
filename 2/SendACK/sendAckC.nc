@@ -180,7 +180,7 @@ module sendAckC {
 
 		return buf;
 
-		}
+	}
 
     else {
 		my_msg_t* mess = (my_msg_t*)payload;
