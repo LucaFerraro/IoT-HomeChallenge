@@ -27,6 +27,7 @@ module sendAckC {
 
   uint8_t counter = 0;
   // uint8_t rec_id;
+
   bool rec_id = FALSE; // Boolean if the ack is received
   message_t packet;
 
@@ -62,7 +63,7 @@ module sendAckC {
 	call PacketAcknowledgements.requestAck(&packet); // Set the ACK
 
 	// Send request to 2
-	if(call AMSend.send( 2 , &packet,sizeof(my_msg_t)) == SUCCESS){
+	if(call AMSend.send(2 , &packet,sizeof(my_msg_t)) == SUCCESS){
 
 		dbg("radio_send", "Packet passed to lower layer successfully!\n");
 		dbg("radio_pack",">>>Pack\n \t Payload length %hhu \n", call Packet.payloadLength( &packet ) );

@@ -17,7 +17,7 @@ typedef nx_struct my_msg {
 #define RESP 2 
 
 enum{
-AM_MY_MSG = 6,
+	AM_MY_MSG = 6,
 };
 
 #endif
