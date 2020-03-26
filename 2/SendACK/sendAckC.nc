@@ -226,8 +226,6 @@ module sendAckC {
 
 		if (mess->type == REQ && TOS_NODE_ID== 2 ){
 
-			dbg_clear("radio_pack", "\t\t counter: %hhu \n", mess->counter);
-
 			counter = mess->counter;
 
 			sendResp(); // Send Response
@@ -241,6 +239,8 @@ module sendAckC {
 			dbg_clear("radio_pack", "\t\t data: %hhu \n", mess->data);
 
 		}
+
+		dbg_clear("radio_pack", "\t\t counter: %hhu \n", mess->counter);
 		
 		return buf;
     }
