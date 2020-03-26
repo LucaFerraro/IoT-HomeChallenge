@@ -9,7 +9,7 @@ implementation {
   components MainC, sendAckC as App;
   //add the other components here
   components new TimerMilliC() as request_t;
-  components new FakeSensorC()
+  components new FakeSensorC();
   components ActiveMessageC;
   components new AMSenderC(AM_MY_MSG);
   components new AMReceiverC(AM_MY_MSG);
@@ -27,7 +27,7 @@ implementation {
   App.Receive -> AMReceiverC;
 
   //Interfaces to access package fields
-
+  App.PacketAcknowledgements -> ActiveMessageC;
 
   //Timer interface
   App.requestTimer -> request_t;
