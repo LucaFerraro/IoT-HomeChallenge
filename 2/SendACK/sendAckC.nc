@@ -153,9 +153,19 @@ module sendAckC {
 
 	if(&packet == buf && call PacketAcknowledgements.wasAcked( buf )){
 
-		rec_id = TRUE;
+		if (TOS_NODE_ID == 1){
 
-		dbg("Ack", "Ack correctly received!\n");
+			rec_id = TRUE;
+
+			dbg("Ack", "Ack correctly received!\n");
+
+		}
+
+		if(TOS_NODE_ID == 2){
+
+			dbg("Ack", "Node 2 ACK recevived!\n");
+
+		}
 
 	}
 
@@ -191,7 +201,7 @@ module sendAckC {
 		dbg_clear("radio_pack","\t\t Payload Received\n" );
 		dbg_clear("radio_pack", "\t\t type: %hhu \n ", mess->type);
 
-		if (mess->type == REQ){
+		if (mess->type == REQ && TOS_NODE_ID==2 ){
 
 			dbg_clear("radio_pack", "\t\t data: %hhu \n", mess->data);
 
@@ -227,7 +237,7 @@ module sendAckC {
 	 * X. Use debug statement showing what's happening (i.e. message fields)
 	 */
 
-	dbg("data","fake read done %f\n",data);
+	dbg("role","fake read done %f\n",data);
 
 	my_msg_t* resp = (my_msg_t*)call Packet.getPayload(&packet, sizeof(my_msg_t));
 
@@ -241,6 +251,8 @@ module sendAckC {
 	resp->counter = counter;      // Counter value 
 	resp->type = RESP; // Type of the msg
 	resp->data = data; // Fake data
+
+	call PacketAcknowledgements.requestAck(&packet); // Set the ACK
 
 	// Send response to 1
 	if(call AMSend.send(1 , &packet,sizeof(my_msg_t)) == SUCCESS){
