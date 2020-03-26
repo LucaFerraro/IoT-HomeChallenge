@@ -68,7 +68,18 @@ module sendAckC {
 		dbg("radio_send", "Packet passed to lower layer successfully!\n");
 		dbg("radio_pack",">>>Pack\n \t Payload length %hhu \n", call Packet.payloadLength( &packet ) );
 		dbg_clear("radio_pack","\t Payload Sent\n" );
-		dbg_clear("radio_pack", "\t\t type: %hhu \n ", rcm->type);
+
+		if (rcm->type == 1){
+
+			dbg_clear("radio_pack", "\t\t type: REQ \n ");
+
+		}
+		else{
+
+			dbg_clear("radio_pack", "\t\t type: RESP \n ");
+			
+		}
+
 		dbg_clear("radio_pack", "\t\t counter: %hhu \n", rcm->counter);
 	
 	}
@@ -157,13 +168,13 @@ module sendAckC {
 
 			rec_id = TRUE;
 
-			dbg("Ack", "Ack correctly received!\n");
+			dbg("radio_ack", "Node 1 Ack correctly received!\n");
 
 		}
 
 		if(TOS_NODE_ID == 2){
 
-			dbg("Ack", "Node 2 ACK recevived!\n");
+			dbg("radio_ack", "Node 2 ACK recevived!\n");
 
 		}
 
@@ -196,14 +207,28 @@ module sendAckC {
 		my_msg_t* mess = (my_msg_t*)payload;
 		
 		dbg("radio_rec", "Received packet at time %s\n", sim_time_string());
-		dbg("radio_pack"," Payload length %hhu \n", call Packet.payloadLength( buf ));
+		dbg("radio_pack","Payload length %hhu \n", call Packet.payloadLength( buf ));
 		dbg("radio_pack", ">>>Pack \n");
 		dbg_clear("radio_pack","\t\t Payload Received\n" );
-		dbg_clear("radio_pack", "\t\t type: %hhu \n ", mess->type);
 
-		if (mess->type == REQ && TOS_NODE_ID==2 ){
+		if (mess->type == 1){
+
+					dbg_clear("radio_pack", "\t\t type: REQ \n ");
+
+		}
+		else{
+
+			dbg_clear("radio_pack", "\t\t type: RESP \n ");
+			
+		}
+
+
+
+		if (mess->type == REQ && TOS_NODE_ID== 2 ){
 
 			dbg_clear("radio_pack", "\t\t data: %hhu \n", mess->data);
+
+			counter = mess->counter;
 
 			sendResp(); // Send Response
 			//sendResp( mess->counter); // Send Response
