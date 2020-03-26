@@ -92,8 +92,8 @@ module sendAckC {
   event void Boot.booted() {
 	dbg("boot","Application booted.\n");
 
-      dbg("boot","Application booted on node %u.\n", TOS_NODE_ID);
-      call SplitControl.start();
+	dbg("boot","Application booted on node %u.\n", TOS_NODE_ID);
+	call SplitControl.start();
 
   }
 
