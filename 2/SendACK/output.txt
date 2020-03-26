@@ -1,0 +1,106 @@
+********************************************
+*                                          *
+*             TOSSIM Script                *
+*                                          *
+********************************************
+Initializing mac....
+Initializing radio channels....
+    using topology file: topology.txt
+    using noise file: meyer-heavy.txt
+Initializing simulator....
+Activate debug message on channel init
+Activate debug message on channel boot
+Activate debug message on channel radio
+Activate debug message on channel radio_send
+Activate debug message on channel radio_ack
+Activate debug message on channel radio_rec
+Activate debug message on channel radio_pack
+Activate debug message on channel role
+Creating node 1...
+>>>Will boot at time 0 [sec]
+Creating node 2...
+>>>Will boot at time 5 [sec]
+Creating radio channels...
+>>>Setting radio channel from node  1  to node  2  with gain  -60.0  dBm
+>>>Setting radio channel from node  2  to node  1  with gain  -60.0  dBm
+Initializing Closest Pattern Matching (CPM)...
+Reading noise model data file: meyer-heavy.txt
+Loading:##Done!
+>>>Creating noise model for node: 1
+>>>Creating noise model for node: 2
+Start simulation with TOSSIM! 
+
+
+
+DEBUG (1): Application booted.
+DEBUG (1): Application booted on node 1.
+DEBUG (1): Radio on!
+DEBUG (1): Packet passed to lower layer successfully!
+DEBUG (1): >>>Pack
+ 	 Payload length 6 
+	 Payload Sent at time 0:0:0.976562510
+		 type: REQ 
+ 		 counter: 1 
+DEBUG (1): Packet passed to lower layer successfully!
+DEBUG (1): >>>Pack
+ 	 Payload length 6 
+	 Payload Sent at time 0:0:1.953125010
+		 type: REQ 
+ 		 counter: 2 
+DEBUG (1): Packet passed to lower layer successfully!
+DEBUG (1): >>>Pack
+ 	 Payload length 6 
+	 Payload Sent at time 0:0:2.929687510
+		 type: REQ 
+ 		 counter: 3 
+DEBUG (1): Packet passed to lower layer successfully!
+DEBUG (1): >>>Pack
+ 	 Payload length 6 
+	 Payload Sent at time 0:0:3.906250010
+		 type: REQ 
+ 		 counter: 4 
+DEBUG (1): Packet passed to lower layer successfully!
+DEBUG (1): >>>Pack
+ 	 Payload length 6 
+	 Payload Sent at time 0:0:4.882812510
+		 type: REQ 
+ 		 counter: 5 
+DEBUG (2): Application booted.
+DEBUG (2): Application booted on node 2.
+DEBUG (2): Radio on!
+DEBUG (1): Packet passed to lower layer successfully!
+DEBUG (1): >>>Pack
+ 	 Payload length 6 
+	 Payload Sent at time 0:0:5.859375010
+		 type: REQ 
+ 		 counter: 6 
+DEBUG (2): Received packet at time 0:0:5.865051246
+DEBUG (2): Payload length 6 
+DEBUG (2): >>>Pack 
+		 Payload Received
+		 type: REQ 
+ 		 counter: 6 
+DEBUG (1): ACK received!
+DEBUG (1): Received ACK from Mote 2 at time 0:0:5.865219092
+DEBUG (2): fake read done 245
+DEBUG (2): Packet passed to lower layer successfully!
+DEBUG (2): >>>Pack
+ 	 Payload length 6 
+	 Payload Sent at time 0:0:5.874023447
+		 type: RESP 
+ 		 data: 245 
+ 		 counter: 6 
+DEBUG (1): Received packet at time 0:0:5.876708978
+DEBUG (1): Payload length 6 
+DEBUG (1): >>>Pack 
+		 Payload Received
+		 type: RESP 
+ 		 data: 245 
+		 counter: 6 
+DEBUG (2): ACK received!
+DEBUG (2): Received ACK from Mote 1 at time 0:0:5.876876824
+
+
+
+Simulation finished!
+
