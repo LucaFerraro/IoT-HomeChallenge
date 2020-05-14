@@ -50,8 +50,7 @@ We can see that the client jane has published 0 messages of any topic.
 
 - mqtt.username == jane
 
-We can see three CONNECT packet with protocol MQIsdp (the old name of MQTT), 
-with Client ID:
+We can see three CONNECT packet with protocol MQIsdp (the old name of MQTT), with Client ID:
 
 0sMEkncjoYI47sofTNzUON
 
