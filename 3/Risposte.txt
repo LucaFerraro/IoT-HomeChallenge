@@ -104,6 +104,19 @@ Using this filter we can see 7 messages, all having the same source IP address, 
 
 6) How many publishes with QoS 1 don’t receive the ACK?
 
+- Filtering for publish messages: mqtt.msgtype == 3
+
+- Filtering for QoS: mqtt.qos == 1
+
+So combining them: (mqtt.msgtype == 3) && (mqtt.qos == 1).
+This way we find 124 messages published with QoS 1.
+
+If we look for the PUBACK messages (mqtt.msgtype == 4) we fine 74 messages. 
+
+If we do 124-74 we find the messages published with QoS 1 that doesn’t receive an ACK are 50.
+
+
+
 7) How many last will messages with QoS set to 0 are actually delivered?
 
 8) Are all the messages with QoS > 0 published by the client “4m3DWYzWr40pce6OaBQAfk” correctly delivered to the subscribers?
