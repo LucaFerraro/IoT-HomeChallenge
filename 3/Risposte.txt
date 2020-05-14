@@ -52,7 +52,6 @@ The result is the same of the previous filter.
 
 4) How many messages containing the topic “factory/department*/+” are published by a client with user name: “jane”? Where * replaces the dep. number, e.g. factory/department1/+, factory/department2/+ and so on. (btw, * is NOT an MQTT wildcard)
 
-
 - Message must be a publish message: mqtt.msgtype == 3
 
 - Publisher must be Jane: mqtt.username == jane
@@ -92,13 +91,13 @@ In this case, we obtain 13 packets, but only 12 corresponding to the requested t
 
 5) How many clients connected to the broker “hivemq” have specified a will message?
 
-Filter for messages with a will message specified: mqtt.conflag.willflag == 1
+- Filter for messages with a will message specified: mqtt.conflag.willflag == 1
 
-Filter for seeing only clients connected to the broker “hivemq” (using IP address resolution): ip.dst == broker.hivemq.org
+- Filter for seeing only clients connected to the broker “hivemq” (using IP address resolution): ip.dst == 18.185.199.22
 
-Filter to use to answer: (mqtt.conflag.willflag == 1) && (ip.dst == 18.185.199.22)
+So to answer we must use as filter: (mqtt.conflag.willflag == 1) && (ip.dst == 18.185.199.22)
 
-Using this filter we can see 5 messages, all having the same source IP address, meaning that only one client with a last will message is connected to broker.hivemq.org
+Using this filter we can see 7 messages, all having the same source IP address, meaning that only one client with a last will message is connected to broker.hivemq.org
 
 
 
