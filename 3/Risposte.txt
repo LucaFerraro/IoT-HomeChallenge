@@ -101,7 +101,6 @@ Using this filter we can see 7 messages, all having the same source IP address, 
 
 
 
-
 6) How many publishes with QoS 1 don’t receive the ACK?
 
 - Filtering for publish messages: mqtt.msgtype == 3
@@ -119,8 +118,30 @@ If we do 124-74 we find the messages published with QoS 1 that doesn’t receive
 
 7) How many last will messages with QoS set to 0 are actually delivered?
 
+Using “Question7.py” we get 4 delivered last will message.
+The program looks for the set last will message (looked for connect messages with will flag == 1) and then looked for the published message having as data a last will message found previously.
+
+
 8) Are all the messages with QoS > 0 published by the client “4m3DWYzWr40pce6OaBQAfk” correctly delivered to the subscribers?
+
+Using filter mqtt.clientid == 4m3DWYzWr40pce6OaBQAfk we get a connect message and then the socket of the connection.
+
+We use the filter (tcp.srcport == 58313) && mqtt.msgtype == 3 for looking for the messages sent by that client ID: there are two messages, but both have QoS == 0. This means no message will be published with QoS > 0.
+
+
 
 9) What is the average message length of a connect msg using mqttv5 protocol? Why messages have different size?
 
+Using “Question9.py” we get as average length: 30.22.
+The program looks for connect messages using MQTTv5 protocol and puts in a list the lengths of those packets. Then takes average.
+Different lengths are due to the presence of a last will message.
+
+
+
 10)Why there aren’t any REQ/RESP pings in the pcap?
+
+Because publisher publish messages before the expiration of any keep alive timeout.
+
+
+
+
