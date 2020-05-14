@@ -1,0 +1,89 @@
+1) What’s the difference between the message with MID: 3978 and the one with MID: 22636?
+
+
+- coap.mid == 3978
+- coap.mid == 22636
+
+Message with MID 3978: 
+They are confirmable messages, since Type: Confirmable (0) and it is present an ACK 
+message (packet number 6702)
+
+Message with MID 22636: 
+They are non confirmable messages, since Type: Non-Confirmable (1) and an ACK 
+is not present.
+
+Both use DELETE method as it can be seen in Code: DELETE (4)
+
+
+
+2) Does the client receive the response of message No. 6949?
+
+
+From the fields of COAP protocol we can see that it is a Confirmable message
+and that it uses a GET method. To see if it has received the Response, we search
+for the same Token = 6f:b6:3c:18
+
+- coap.token == 6f:b6:3c:18
+
+Message 6593 is the Response, it's an ACK message.
+
+
+
+3) How many replies of type connectable and result code “Content” are received by the server “localhost”?
+
+
+ip.addr == 127.0.0.1 && coap.type == 0
+
+
+- ip.addr == 127.0.0.1  && coap.code == 69
+
+"coap.code == 69" means "2.05 Content"
+
+We can clearly see 8 packets with that features
+
+
+4) How many messages with the topic “factory/department/+” are published by a client with user name: “jane”?
+
+- mqtt.msgtype == 3 && mqtt.username == jane
+
+We can see that the client jane has published 0 messages of any topic.
+
+- mqtt.username == jane
+
+We can see three CONNECT packet with protocol MQIsdp (the old name of MQTT), 
+with Client ID:
+
+0sMEkncjoYI47sofTNzUON
+
+25cGIdhv5Oi9qC7l7Ykaju
+
+5a9OJR9zWKLU8E8lqrAjvw
+
+There is also a forthone that is a CONNECT message which contains also
+a Last Will Message:
+
+Will Topic: factory/department1/section3/hydraulic_valve
+Will Message: error: cyisksbh
+
+Searching for the three former Client ID, we can confirm that there are 
+no published messages by client jane with topic “factory/department/+”.
+
+
+
+
+
+
+
+
+
+
+
+5) How many clients connected to the broker “hivemq” have specified a will message?
+  
+  Questions
+6) How many publishes with QoS 1 don’t receive the ACK?
+7) How many last will messages with QoS set to 0 are
+actually delivered?
+8) Are all the messages with QoS > 0 published by the client “4m3DWYzWr40pce6OaBQAfk” correctly delivered to the subscribers?
+9) What is the average message length of a connect msg using mqttv5 protocol? Why messages have different size?
+10) Why there aren’t any REQ/RESP pings in the pcap?
