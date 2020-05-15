@@ -123,8 +123,7 @@ The program looks for the set last will message (looked for connect messages wit
 
 Using filter mqtt.clientid == 4m3DWYzWr40pce6OaBQAfk we get a connect message and then the socket of the connection.
 
-We use the filter (tcp.srcport == 58313) && mqtt.msgtype == 3 for looking for the messages sent by that client ID: there are two messages, but both have QoS == 0. This means no message will be published with QoS > 0.
-
+We use the filter (tcp.srcport == 58313) && mqtt.msgtype == 3 for looking for the messages sent by that client ID: there are two messages: one of them has QoS == 2. So, the answer to the question is 1.
 
 
 9) What is the average message length of a connect msg using mqttv5 protocol? Why messages have different size?
