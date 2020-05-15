@@ -110,7 +110,7 @@ Using this filter we can see 7 messages, all having the same source IP address, 
 - Filtering for Duplicated messages: mqtt.dupflag ==1
 
 So combining them: (mqtt.msgtype == 3) && (mqtt.qos == 1) && (mqtt.dupflag ==1)
-This way we find 2 publishes messages with QoS 1 that don’t receive the ACK.
+This way we find 2 published messages with QoS 1 that don’t receive the ACK.
 
 
 7) How many last will messages with QoS set to 0 are actually delivered?
