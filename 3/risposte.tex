@@ -98,13 +98,11 @@
 \section{\large{How many publishes with QoS 1 don’t receive the ACK?}}
     \begin{itemize}
         \item Filtering for publish messages: \texttt{mqtt.msgtype == 3}.
-        \item Filtering for QoS: \texttt{mqtt.qos == 1}
+        \item Filtering for QoS: \texttt{mqtt.qos == 1}.
+        \item Filtering for Duplicated messages: \texttt{mqtt.dupflag ==1}.
     \end{itemize}
-    So combining them: \texttt{(mqtt.msgtype == 3) \&\& (mqtt.qos == 1)}.\\
-    This way we find 124 messages published with QoS 1. \\ \\
-    If we look for the \textbf{PUBACK} messages (mqtt.msgtype == 4) we find 74 messages. \\
-    If we do $124-74$ we find the messages published with QoS 1 that doesn’t receive an ACK are 50.
-
+    So combining them: \texttt{(mqtt.msgtype == 3) \&\& (mqtt.qos == 1) \&\& (mqtt.dupflag ==1)}
+    This way we find 2 published messages with QoS 1 that don’t receive the ACK.
 
 \section{\large{How many last will messages with QoS set to 0 are actually delivered?}} 
     Using \href{https://github.com/LucaFerraro/IoT-HomeChallenge/blob/master/3/Question7.py}{\textcolor{url_blue}{\textbf{Question7.py}}} we get 4 delivered last will message. \\
