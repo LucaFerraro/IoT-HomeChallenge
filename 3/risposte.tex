@@ -53,7 +53,7 @@
     This filter would find eventual “content” packets sent with delay because the resource was not available when requested. 
     In this case, the server would have sent an ACK with no content and a confirmable message with the content as soon as the resource would have become available. \\
     The result is the same of the previous filter.
- 
+
     
  \section[Section Title. Section Subtitle]{\large{How many messages containing the topic “factory/department*/+” are published by a client with user name:
  \textit{“jane”}?} \\ {\normalsize{Where * replaces the dep. number, e.g. factory/department1/+, factory/department2/+ and so on. (btw, * is NOT an MQTT wildcard)}}}
@@ -71,15 +71,15 @@
     \end{itemize}
     There is also a 4th packet, that is a CONNECT message containing a Last Will Message:
     \begin{itemize}
-        \item Will topic: \texttt{$factory/department1/section3/hydraulic_valve$}
+        \item Will topic: \texttt{$factory/department1/section3/hydraulic\_valve$}
         \item Will message: “error: cyisksbh”
     \end{itemize}
     
     Anyway, each time Jane connects to the broker, it opens a socket with the following source ports: \texttt{42821, 40989, 40005, 50985}.\\
     For that reason, we must look for all the publish messages sent by any of these port and to do it we use the following filter: \\ \\
     \texttt{(tcp.srcport == 42821 $||$ tcp.srcport == 40989 $||$ tcp.srcport == 4005 $||$ tcp.srcport == 50985) \&\& (mqtt.msgtype == 3)} \\ \\
-    In this case, we obtain 7 messages, but only 6 published for there requested topic. \\
-    
+    In this case, we obtain 7 messages but none of them matches the requested topic. 6 of the 7 publish messages could have matched a topic of the
+    form “factory/department\*/\#” but since a + is present only topics with a single level after the specified ones could be accepted.
     In case we also want the messages Jane has sent to subscribe to the requested topic, we need to use this filter: \\ \\ 
     \texttt{(tcp.srcport == 42821 $||$ tcp.srcport == 40989 $||$ tcp.srcport == 40005 $||$ tcp.srcport == 50985) \&\&  (mqtt.msgtype == 3 $||$ mqtt.msgtype == 8)} \\ \\
     In this case, we obtain 13 packets, but only 12 corresponding to the requested topic.
@@ -104,9 +104,10 @@
     So combining them: \texttt{(mqtt.msgtype == 3) \&\& (mqtt.qos == 1) \&\& (mqtt.dupflag ==1)}
     This way we find 2 published messages with QoS 1 that don’t receive the ACK.
 
+
 \section{\large{How many last will messages with QoS set to 0 are actually delivered?}} 
     Using \href{https://github.com/LucaFerraro/IoT-HomeChallenge/blob/master/3/Question7.py}{\textcolor{url_blue}{\textbf{Question7.py}}} we get 4 delivered last will message. \\
-    The program looks for the set last will message (looked for connect messages with will flag == 1) and then looks for the published message having as data a last will message found previously.
+    The program looks for the set last will message (looked for connect messages with will flag == 1 and QoS == 0) and then looks for the published message having as data a last will message found previously.
 
    
 \section{\large{Are all the messages with $QoS > 0$ published by the client “4m3DWYzWr40pce6OaBQAfk” correctly delivered to the subscribers?}}
