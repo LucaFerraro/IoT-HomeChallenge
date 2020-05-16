@@ -11,7 +11,7 @@ lwm = []
 
 for packet in cap:
     try:
-        if packet.mqtt.conflag_willflag == str(1):
+        if packet.mqtt.conflag_willflag == str(1) and packet.mqtt.qos == str(0):
             lwm.append(str(packet.mqtt.willmsg))
     except: 
         pass
