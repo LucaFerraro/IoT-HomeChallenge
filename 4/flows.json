@@ -1,0 +1,1 @@
+[{"id":"5466557.35af92c","type":"delay","z":"eeca5098.06ef","name":"Message Rate Limiter","pauseType":"rate","timeout":"1","timeoutUnits":"seconds","rate":"1","nbRateUnits":"1","rateUnits":"minute","randomFirst":"1","randomLast":"5","randomUnits":"seconds","drop":false,"x":820,"y":120,"wires":[["43605a6b.723854","a32925e3.cf1618"]]}]
