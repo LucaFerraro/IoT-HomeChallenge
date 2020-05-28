@@ -7,7 +7,6 @@
 #include "Homechallenge5.h"
 #include "stdlib.h"
 #include "printf.h"
-#include "time.h"
 
 module Homechallenge5C @safe() {
 
@@ -28,8 +27,8 @@ implementation {
   message_t packet;
 
   uint16_t random_number;
+  uint32_t counter = 0;
   
-  time_t t;
   
   event void Boot.booted() {
     call AMControl.start();
@@ -60,8 +59,12 @@ implementation {
 
   // Timer zero expires, trigger mote2
   event void Timer0.fired() {
-  
+ 	
   	radio_count_msg_t * rcm;
+  	
+  	if (counter == 0) {
+  		counter = 2;
+  	}
 
   	// Proceeding only if we're node 2
   	if(TOS_NODE_ID != 2){
@@ -70,8 +73,10 @@ implementation {
 
   	}
 
-	srand(time(&t));
-	random_number = rand()%101; //generate a number between 0 and 100
+	srand(counter);
+	counter = counter + 1;
+	random_number = rand(); //generate a number between 0 and 100
+	random_number = random_number % 101;
 
     dbg("Homechallenge5", "Homechallenge5: timer fired, generated value is : %hu.\n", random_number);
 
@@ -108,9 +113,13 @@ implementation {
       return;
 
     }
-	
-	srand(time(&t));
-	random_number = rand()%101; //generate a number between 0 and 100
+    
+
+	srand(counter);
+	random_number = rand(); //generate a number 
+	counter = counter + random_number;
+	random_number = random_number % 101; //between 0 and 100
+
 
     dbg("Homechallenge5", "Homechallenge5: timer fired, counter is %hu.\n", random_value);
 
