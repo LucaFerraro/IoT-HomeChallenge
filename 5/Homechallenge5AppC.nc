@@ -19,6 +19,7 @@ implementation {
 
   components ActiveMessageC;
   components SerialStartC;
+  components PrintfC;
   
   App.Boot -> MainC.Boot;
   

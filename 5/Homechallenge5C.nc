@@ -21,11 +21,11 @@ module Homechallenge5C @safe() {
   }
 }
 
+
 implementation {
 
   message_t packet;
 
-  bool locked;
   uint16_t random_number;
   
   event void Boot.booted() {
@@ -58,32 +58,25 @@ implementation {
   // Timer zero expires, trigger mote2
   event void Timer0.fired() {
 
-    // Proceeding only if we're node 2
-    if(TOS_NODE_ID != 2){
+  	// Proceeding only if we're node 2
+  	if(TOS_NODE_ID != 2){
 
-      return;
+     	 return;
 
-    }
+  	}
 
 	random_number = rand()%101; //generate a number between 0 and 100
 
-    dbg("Homechallenge5", "Homechallenge5: timer fired, generated value is : %nu.\n", random_number);
+    dbg("Homechallenge5", "Homechallenge5: timer fired, generated value is : %hu.\n", random_number);
 
-    if (locked) {
 
-      return;
+    radio_count_msg_t* rcm = (radio_count_msg_t*)call Packet.getPayload(&packet, sizeof(radio_count_msg_t));
 
-    }
-
-    else {
-
-      radio_count_msg_t* rcm = (radio_count_msg_t*)call Packet.getPayload(&packet, sizeof(radio_count_msg_t));
-
-      if (rcm == NULL) {
+    if (rcm == NULL) {
 
 	      return;
 
-      }
+    }
 
       // Filling messages fields:
       rcm->random_number = random_number;       // Computed value 
@@ -93,10 +86,8 @@ implementation {
 
         dbg("Homechallenge5", "Homechallenge5: packet sent.\n");
 
-	      locked = TRUE;
 
-      }
-    }
+ 	 }
   }
 
 
@@ -114,33 +105,22 @@ implementation {
 
     dbg("Homechallenge5", "Homechallenge5: timer fired, counter is %hu.\n", random_value);
 
-    if (locked) {
+	radio_count_msg_t* rcm = (radio_count_msg_t*)call Packet.getPayload(&packet, sizeof(radio_count_msg_t));
+	
+	if (rcm == NULL) {
 
-      return;
+ 		return;
 
     }
 
-    else {
+    // Filling messages fields:
+    rcm->random_number = random_number;      // Computed value 
+    rcm->senderid = TOS_NODE_ID; 			   // ID of the node
 
-      radio_count_msg_t* rcm = (radio_count_msg_t*)call Packet.getPayload(&packet, sizeof(radio_count_msg_t));
+    if (call AMSend.send(AM_BROADCAST_ADDR, &packet, sizeof(radio_count_msg_t)) == SUCCESS) {
 
-      if (rcm == NULL) {
+    	dbg("Homechallenge5", "Homechallenge5: packet sent.\n");
 
-  return;
-
-      }
-
-      // Filling messages fields:
-      rcm->random_number = random_number;      // Computed value 
-      rcm->senderid = TOS_NODE_ID; 			   // ID of the node
-
-      if (call AMSend.send(AM_BROADCAST_ADDR, &packet, sizeof(radio_count_msg_t)) == SUCCESS) {
-
-        dbg("Homechallenge5", "Homechallenge5: packet sent.\n");
-
-        locked = TRUE;
-
-      }
     }
   }
 
@@ -165,7 +145,7 @@ implementation {
 	  dbg("Homechallenge5", "Homechallenge5 packet with value %hhu.\n", rcm->random_number );
 
       //CONNECT TO NODE RED
-      printf("received %hd mote%d\n", rcm->random_number, rcm->senderID);
+      printf("received %hd mote%d\n", rcm->random_number, rcm->senderid);
       printfflush();
 
       return bufPtr;
@@ -177,12 +157,7 @@ implementation {
   
 
   event void AMSend.sendDone(message_t* bufPtr, error_t error) {
-
-    if (&packet == bufPtr) {
-
-      locked = FALSE;
-      
-    }
+	return;
   }
 
 }
