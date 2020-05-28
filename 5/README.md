@@ -2,6 +2,7 @@
 ##  **Bernardo Camajori Tedeschini (10584438), Luca Ferraro (10748116), Fabio Losavio (10567493)**
 
 Is possible to find the project in this [*GitHub Repository*](https://github.com/LucaFerraro/IoT-HomeChallenge)
+
 [*Thinkspeak channel*](https://thingspeak.com/channels/1069402)
 
 The aim of the project was to develop a TinyOS application implementing a simulated radio communication between 3 motes sending messages every 5s.
