@@ -57,6 +57,8 @@ implementation {
 
   // Timer zero expires, trigger mote2
   event void Timer0.fired() {
+  
+  	radio_count_msg_t * rcm;
 
   	// Proceeding only if we're node 2
   	if(TOS_NODE_ID != 2){
@@ -70,7 +72,7 @@ implementation {
     dbg("Homechallenge5", "Homechallenge5: timer fired, generated value is : %hu.\n", random_number);
 
 
-    radio_count_msg_t* rcm = (radio_count_msg_t*)call Packet.getPayload(&packet, sizeof(radio_count_msg_t));
+    rcm = (radio_count_msg_t*)call Packet.getPayload(&packet, sizeof(radio_count_msg_t));
 
     if (rcm == NULL) {
 
@@ -93,6 +95,8 @@ implementation {
 
   // Timer 1 Expires, trigger mote3:
   event void Timer1.fired() {
+  
+  	radio_count_msg_t* rcm;
 
     // Procedeeding only if we're node 3:
     if(TOS_NODE_ID != 3){
@@ -105,7 +109,7 @@ implementation {
 
     dbg("Homechallenge5", "Homechallenge5: timer fired, counter is %hu.\n", random_value);
 
-	radio_count_msg_t* rcm = (radio_count_msg_t*)call Packet.getPayload(&packet, sizeof(radio_count_msg_t));
+	rcm = (radio_count_msg_t*)call Packet.getPayload(&packet, sizeof(radio_count_msg_t));
 	
 	if (rcm == NULL) {
 
