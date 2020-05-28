@@ -3,6 +3,7 @@
 #include "Homechallenge5.h"
 #define NEW_PRINTF_SEMANTICS
 #include "printf.h"
+#include "time.h"
 
 
 configuration Homechallenge5AppC {}
@@ -20,6 +21,7 @@ implementation {
   components ActiveMessageC;
   components SerialStartC;
   components PrintfC;
+  components TimeC;
   
   App.Boot -> MainC.Boot;
   

@@ -7,6 +7,7 @@
 #include "Homechallenge5.h"
 #include "stdlib.h"
 #include "printf.h"
+#include "time.h"
 
 module Homechallenge5C @safe() {
 
@@ -27,6 +28,8 @@ implementation {
   message_t packet;
 
   uint16_t random_number;
+  
+  time_t t;
   
   event void Boot.booted() {
     call AMControl.start();
@@ -67,6 +70,7 @@ implementation {
 
   	}
 
+	srand(time(&t));
 	random_number = rand()%101; //generate a number between 0 and 100
 
     dbg("Homechallenge5", "Homechallenge5: timer fired, generated value is : %hu.\n", random_number);
@@ -105,6 +109,7 @@ implementation {
 
     }
 	
+	srand(time(&t));
 	random_number = rand()%101; //generate a number between 0 and 100
 
     dbg("Homechallenge5", "Homechallenge5: timer fired, counter is %hu.\n", random_value);
@@ -149,7 +154,8 @@ implementation {
 	  dbg("Homechallenge5", "Homechallenge5 packet with value %hhu.\n", rcm->random_number );
 
       //CONNECT TO NODE RED
-      printf("received %hd mote%d\n", rcm->random_number, rcm->senderid);
+      printf("received %u mote%d\n", rcm->random_number, rcm->senderid);
+      
       printfflush();
 
       return bufPtr;
