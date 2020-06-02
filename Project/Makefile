@@ -1,4 +1,4 @@
-COMPONENT=Homechallenge5AppC
+COMPONENT=ProjectAppC
 CFLAGS += -I$(TOSDIR)/lib/printf
 #CFLAGS += -DNEW_PRINTF_SEMANTICS
 
