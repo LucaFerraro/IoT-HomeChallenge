@@ -37,9 +37,6 @@ implementation {
 
   message_t packet;
 
-  uint16_t random_number;
-  uint32_t counter = 0;
-
   /* new */
   uint16_t getRssi(message_t *msg);
   
@@ -75,25 +72,15 @@ implementation {
   event void Timer0.fired() {
  	
   	radio_count_msg_t * rcm;
-  	
-  	if (counter == 0) {
-  		counter = 2;
-  	}
 
   	// Procedeeding only if we're not node 1:
-  	if(TOS_NODE_ID == 1){
+  	if(1){
 
      	 return;
 
   	}
 
-	srand(counter);
-	counter = counter + 1;
-	random_number = rand(); //generate a number between 0 and 100
-	random_number = random_number % 101;
-
     dbg("Homechallenge5", "Homechallenge5: timer fired, generated value is : %hu.\n", random_number);
-
 
     rcm = (radio_count_msg_t*)call Packet.getPayload(&packet, sizeof(radio_count_msg_t));
 
@@ -103,21 +90,17 @@ implementation {
 
     }
 
-      // Filling messages fields:
-      rcm->random_number = random_number;       // Computed value 
-      rcm->senderid = TOS_NODE_ID; 				// ID of the node
+    // Filling messages fields:
+    rcm->senderid = TOS_NODE_ID;  // ID of the node
 
-      /* new */
-      if (call RssiMsgSend.send(AM_BROADCAST_ADDR, &packet, sizeof(radio_count_msg_t)) == SUCCESS) {
+    /* new */
+    if (call RssiMsgSend.send(AM_BROADCAST_ADDR, &packet, sizeof(radio_count_msg_t)) == SUCCESS) {
 
-        dbg("Homechallenge5", "Homechallenge5: packet sent.\n");
+      dbg("Homechallenge5", "Homechallenge5: packet sent.\n");
 
+ 	  }
 
- 	 }
-
-    
   }
-
 
   // Timer 1 Expires, trigger mote2:
   event void Timer1.fired() {
@@ -131,32 +114,25 @@ implementation {
 
     }
     
-
-	srand(counter);
-	random_number = rand(); //generate a number 
-	counter = counter + random_number;
-	random_number = random_number % 101; //between 0 and 100
-
-
     dbg("Homechallenge5", "Homechallenge5: timer fired, counter is %hu.\n", random_value);
 
-	rcm = (radio_count_msg_t*)call Packet.getPayload(&packet, sizeof(radio_count_msg_t));
+	  rcm = (radio_count_msg_t*)call Packet.getPayload(&packet, sizeof(radio_count_msg_t));
 	
-	if (rcm == NULL) {
+	  if (rcm == NULL) {
 
- 		return;
+ 		  return;
 
     }
 
     // Filling messages fields:
-    rcm->random_number = random_number;      // Computed value 
-    rcm->senderid = TOS_NODE_ID; 			   // ID of the node
+    rcm->senderid = TOS_NODE_ID; // ID of the node
 
     if (call AMSend.send(AM_BROADCAST_ADDR, &packet, sizeof(radio_count_msg_t)) == SUCCESS) {
 
     	dbg("Homechallenge5", "Homechallenge5: packet sent.\n");
 
     }
+  
   }
 
 
@@ -168,24 +144,28 @@ implementation {
   	if(TOS_NODE_ID != 1){
   	
   		return;
+
   	}
   	
   	
-    if (len != sizeof(radio_count_msg_t)) {return bufPtr;
+    if (len != sizeof(radio_count_msg_t)) {
+
+      return bufPtr;
+    
     }
 
     else {
 
-	  radio_count_msg_t* rcm = (radio_count_msg_t*)payload;
+	    radio_count_msg_t* rcm = (radio_count_msg_t*)payload;
 
-    /* new */
-    rcm->rssi = getRssi(bufPtr);
+      /* new */
+      rcm->rssi = getRssi(bufPtr);
 
-	  dbg("Homechallenge5", "Homechallenge5 packet with value %hhu.\n", rcm->random_number );
+	    dbg("Homechallenge5", "Homechallenge5 packet with value %hhu.\n", rcm->random_number );
 
       //CONNECT TO NODE RED
       /* new */
-      printf("received %u mote%d rssi %d\n", rcm->random_number, rcm->senderid, rcm->rssi);
+      printf("received from mote%d rssi %d\n", rcm->senderid, rcm->rssi);
       
       printfflush();
 
@@ -195,9 +175,10 @@ implementation {
     
   }
 
+  
   /* new */
   event bool RssiMsgIntercept.forward(message_t *msg, void *payload, uint8_t len) {
-
+    /*
     radio_count_msg_t* rcm = (radio_count_msg_t*)payload;
 
     //Only node 1 will deal with received messages
@@ -206,30 +187,32 @@ implementation {
   		return;
   	}
 
-	  
-
     rcm->rssi = getRssi(msg);
 
-    dbg("Homechallenge5", "Homechallenge5 packet with value %hhu.\n", rcm->random_number );
+    dbg("Homechallenge5", "Homechallenge5 packet with value %hhu.\n", rcm->random_number);
 
     //CONNECT TO NODE RED
-    printf("received %u mote%d rssi %d\n", rcm->random_number, rcm->senderid, rcm->rssi);
+    //printf("received %u mote%d rssi %d\n", rcm->random_number, rcm->senderid, rcm->rssi);
     
-    printfflush();
+    //printfflush();
     
+    */
+
     return TRUE;
+    
   }
   
   
 
   event void AMSend.sendDone(message_t* bufPtr, error_t error) {
-	return;
+	  return;
   }
 
   /* new */
   event void RssiMsgSend.sendDone(message_t *m, error_t error){
-	return;
+	  return;
   }
+
 
   /* new */
   #ifdef __CC2420_H__  
@@ -258,7 +241,3 @@ implementation {
   #endif
 
 }
-
-
-
-
