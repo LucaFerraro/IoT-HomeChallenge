@@ -1,1 +1,44 @@
 %Luca
+
+The first requirement to try this project is having an \textbf{IFTTT} account opened. This because in the project, when two nodes
+are too close one to the other, a notification is net via email through IFTTT. To make this possible, it's necessary to create an
+Applet in our IFTTT account. The steps to create it are (once registered to IFTTT):
+\begin{itemize}
+    \item Creating a new applet.
+    \item In the section \textbf{This}, select the voice \textit{Webhooks} and to trigger the reception of a web request.
+    \item Name the event \textit{Proximity\_alarm}; the name is fundamental for the proper working of the application.
+    \item In the section \textbf{That}, choose \textit{Email} and insert the email where you want to receive notifications.
+\end{itemize}
+Now we can start the simulation. \\
+
+First of all, we need to compile the code. To do this, we need to navigate from the terminal
+to the directory of the project and run the command \texttt{make telosb}: the result is the creation of a folder (named 
+\textbf{build}) containing the executable file that is needed to add the motes inside the simulation framework \textbf{Cooja}.\\ 
+
+The next step is opening \textbf{Cooja}. We need to create a new simulation and add as \textit{Skymotes} the number of motes we 
+want to use in the simulation.\\ 
+Pay attention that the number of nodes can't be greater than the parameter \textbf{NUMBER\_OF\_MOTES}
+that is specified in the file \texttt{Project.h} (it's been initialized to 5 from us, but it can be changed).\\ 
+Also, the number of motes cannot be in general greater than 14, that is the number of TCP connections we have added in the 
+\textbf{NodeRed} flow we have prepared.\\ In case the simulation would require a greater number of motes, the file 
+\texttt{flows.json} must be changed adding the needed \textit{tcp in} blocks.\\ 
+Once added the motes, it's necessary to start a socket on each on of them (each mote acts as a server); the ports on which the 
+sockets must be opened are (if the file \texttt{flows.json} is not changed from the user of the program) the ones from 60001 to 
+60014.\\ 
+
+At this point, we need to start \textbf{NodeRed}. To do this we need to:
+\begin{itemize}
+    \item Open the terminal.
+    \item Type the command \texttt{node-red}.
+    \item Open a browser and connect to the local host (\textit{http://127.0.0.1:1880/}).
+    \item Import the file \texttt{flows.json}.
+    \item Deploy the flow (check if the tcp blocks corresponding to the port on which the socket has been opened in 
+            Cooja is actually connected to that socket). 
+\end{itemize}
+Note that, by default, the block \textit{Req Params} is connected to the block \textit{Web Req}, that sends a mail through
+\textbf{IFTTT} to one of ours mail. In order to let a user receive the notification as a mail, the block \textit{Req Params} must
+instead be connected to the block \textit{INSERT YOUR IFTTT KEY TO GET EMAILS}, which must be filled with the key of the mail
+registered in \textbf{IFTTT}. (All of this is explained also in the block \textit{IFTTT instructions} inside the Nodered flow.)\\ 
+
+Now everything is ready to start the simulation: just go again in Cooja and click on the \textit{Start} button. By moving the 
+motes around, it's possible to see the messages exchanged by the motes both in Cooja and in NodeRed.
