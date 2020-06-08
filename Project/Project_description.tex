@@ -3,3 +3,17 @@
 \subsection{TinyOS}
 
 \subsection{NodeRed}
+
+In the \textbf{NodeRed} application we first need to connect to the Cooja simulation;
+this can be done using the TCP_IN block in which we listen for the TCP requests
+at the default ports (\textit{60001}, \textit{60002}, \textit{60003}, ...).
+In the NodeRed we put up to 14 connections but this can be easily upgraded
+increasing the number of blocks.
+Then the payload is filtered in order to retrieve correctly the information 
+about the Src and Dst motes that triggered the \textit{Alarm} and the power of the message (the 
+distance between the two motes).
+Subsequently we adapt the format of the payload in order to be suitable for the 
+IFTTT syntax.
+Finally we send a HTTPS request to the IFTTT account specified, that will trigger a command
+to send an Email with the specific data of the \textit{Alarm}.
+
