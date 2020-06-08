@@ -1,57 +1,42 @@
 %Bernardo
 
 \subsection{TinyOS}
-The primary Aim of the Project is to understand if two motes are too close each other, thus 
+The primary aim of the Project is to understand if two motes are too close each other; 
 in order to obtain this, we have thought to exploit the \textit{Receive Signal Strengh Indication (RSSI)}
-from the packets received.
-We therefore include in the \textbf{ProjectAppC.nc} all the components to extract the Power received 
-from the packet according to the specific Radio used. 
-
-The temporal accuracy of the simulation was \textit{500 ms}, so each mote will send a packet in broadcast
-at the trigger of a Timer every \textit{500 ms}.
-The problem was then that if an \textit{Alarm} was solicit, the very next \textit{Alarm} should have been
+from the packets received. \\
+Therefore, we include in the \textbf{ProjectAppC.nc} file all the components to extract the power received 
+from the packet according to the specific radio used. \\
+The temporal accuracy of the simulation was \textit{500 ms}, so each mote will send a packet in broadcast 
+at the expiration of a timer, that happens every \textit{500 ms}.\\
+The problem was then that if an \textit{Alarm} was solicited, the very next \textit{Alarm} should have been
 relaunched at least after 1 minute (to avoid useless repetition of warnings).
-So we create in the \textbf{ProjectC.nc} a structure called \textit{moteMemory[NUMBER_OF_MOTES][2]} that in 
-each mote, takes memory of the time passed between the last \textit{Alarm} with every other mote.
-In particular it is initialized in the function \textbf{AMControl.startDone} with all zeros:
+So, we have created in the \textbf{ProjectC.nc} file a structure called \textit{moteMemory[NUMBER\_OF\_MOTES][2]}: for each mote, 
+this structure keeps memory of the time passed between the last \textit{Alarm} with every other mote. 
+The structure is initialized in the function \textbf{AMControl.startDone} with all zeros; as we can easily understand, it has as
+many rows as thew number of motes we want to consider in the simulation and two columns:
 \begin{itemize}
-    \item The first dimension indicates the mote with which the alarm went off.
-    \item The second dimension indicates:
-        \begin{itemize}
-            \item in the fist cell a boolean value:
-                \begin{itemize}
-                    \item 1 if there was a trigger with specific mote of the first dimension within 1 minute
-                    \item 0 otherwise
-                \end{itemize}
-            \item While in the second cell the time interval between two consecutive notifications 
-            (in multiple of timer duration(\textit{500 ms}))
-        \end{itemize}
+    \item The first column is a boolean, in particular the first column of row \textit{i} is 1 at mote \textit{j} if mote 
+            \textit{j} has received a message from mote with ID = \textit{i} less than a minute ago.
+    \item The second column has a value different from 0 only if the first column of the same row is 1; in this case, it indicates
+            the time elapsed from the last notification sent in multiple of the timer duration (so \textit{500 ms}). Thus, this
+            column of the row \textit{i} is updated when the timer fires and the first column of the same row is 1.
 \end{itemize}
-
-Then when a Timer fires, for each motes, we increment the time in the second cell of the second dimension
-(of course only if the boolean value is set to 1).
-
-When a packet is received, we take the RSSI from the packet and if:
-\begin{itemize}
-    \item it is higher than the \textit{POWER_THRESHOLD},
-    \item the boolean value of the mote that sent the packet is 0 (no \textit{Alarm} within 1 minute ago),
-\end{itemize}
-We show off the motes that start the event and the RSSI, and send a message to the NodeRed application.
-
+At this point, we only need to define how it is updated the first column of each row. This is done looking at the \textit{RSSI} of 
+a received packet from mote \textit{i}: if it's higher than the \textit{POWER\_THRESHOLD} and if the boolean value of the row
+\textit{i} of the matrix is 0 (meaning that it has passed at least one minute from the last \textit{Alarm} sent), we show off the
+motes that start the event and the RSSI, and send a message to the NodeRed application.
 
 
 \subsection{NodeRed}
-In the \textbf{NodeRed} application we first need to connect to the Cooja simulation;
-this can be done using the TCP_IN block in which we listen for the TCP requests
-at the default ports (\textit{60001}, \textit{60002}, \textit{60003}, ...).
-In the NodeRed we put up to 14 connections but this can be easily upgraded
-increasing the number of blocks.
 
-Then the payload is filtered in order to retrieve correctly the information 
-about: the Src and Dst motes, that triggered the \textit{Alarm},  and the power of the message (function 
-of the distance between the two motes).
-Subsequently we adapt the format of the payload to be suitable for the 
-IFTTT syntax.
-
-Finally we send an HTTPS request to the IFTTT account specified, that will trigger a command
-to send an Email with the data of the \textit{Alarm}.
+In the \textbf{NodeRed} application, we first connect to the \textbf{Cooja} simulation; this can be done using the \textit{TCP\_IN} 
+block in which we listen for the TCP requests at the default ports (60001, 60002, 60003, ...); 
+we have put up to 14 connections, but this can be easily upgraded increasing the number of blocks.\\ 
+Then, the payload of a received packet is filtered in order to retrieve correctly the information about: 
+\begin{itemize}
+    \item The source and the destination motes, the ones that have triggered the the alarm since too close.
+    \item The power of the message exchanged by them (that is a function of the distance between the two motes).
+\end{itemize}
+Subsequently, we adapt the format of the payload to be suitable for the IFTTT syntax.\\
+Finally we send an HTTPS request to the IFTTT account specified, that will trigger a command to send an email with the 
+data of the \textit{Alarm}.
